@@ -1,3 +1,5 @@
+import random
+
 from COLORS import *
 import time
 
@@ -48,19 +50,25 @@ class AngleDetection:
 
 class Ball:
     coordinates = (GameField.WIDTH // 2, GameField.HEIGHT // 2)
+    dx = random.randint(-10, 10)
+    dy = random.randint(-10, 10)
     color = RED
     size = 10
-
-    def get_coordinates(self):
-        return
 
     @classmethod
     def draw(cls):
         pygame.draw.circle(GameField.screen, cls.color, cls.coordinates, 10)
 
     @classmethod
-    def drop(cls, side):
-        cls.coordinates = cls.coordinates[0], cls.coordinates[1] + (cls.size * side)
+    def move(cls):
+        cls.coordinates = cls.coordinates[0] + cls.dy, cls.coordinates[1] + cls.dx
+
+    @classmethod
+    def check_collision(cls):
+        if cls.coordinates[0] >= GameField.WIDTH or cls.coordinates[0] <= 0:
+            cls.dy = -cls.dy
+        elif cls.coordinates[1] >= GameField.HEIGHT or cls.coordinates[1] <= 0:
+            cls.dx = -cls.dx
 
 
 class Collision:
@@ -80,7 +88,8 @@ class GameLoop:
         GameField.draw()
 
         Ball.draw()
-        Ball.drop(1)
+        Ball.move()
+        Ball.check_collision()
         player_1.draw()
         player_2.draw()
         Platforms.check_collision(player_1)
