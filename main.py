@@ -34,9 +34,10 @@ class Platforms:
                          (self.x + Platforms.size // 2, self.y), 4)
 
     def check_collision(self):
-        if (self.x - Platforms.size // 2 < Ball.coordinates[0] < self.x + Platforms.size // 2 and Ball.coordinates[1] +
-                Ball.size == self.y):
+        if (self.x - Platforms.size // 2 < Ball.coordinates[0] < self.x + Platforms.size // 2) and (
+                (Ball.coordinates[1] + Ball.size == self.y) or (Ball.coordinates[1] - Ball.size == self.y)):
             print("КОНТАКТ!")
+            Ball.dy = - Ball.dy
             return True
 
 
@@ -61,14 +62,14 @@ class Ball:
 
     @classmethod
     def move(cls):
-        cls.coordinates = cls.coordinates[0] + cls.dy, cls.coordinates[1] + cls.dx
+        cls.coordinates = cls.coordinates[0] + cls.dx, cls.coordinates[1] + cls.dy
 
     @classmethod
     def check_collision(cls):
         if cls.coordinates[0] >= GameField.WIDTH or cls.coordinates[0] <= 0:
-            cls.dy = -cls.dy
-        elif cls.coordinates[1] >= GameField.HEIGHT or cls.coordinates[1] <= 0:
             cls.dx = -cls.dx
+        elif cls.coordinates[1] >= GameField.HEIGHT or cls.coordinates[1] <= 0:
+            cls.dy = -cls.dy
 
 
 class Collision:
@@ -78,13 +79,21 @@ class Collision:
 
 class GameLoop:
     running = True
-
+    move_left = None
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
                 break
-
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    move_left = True
+                elif event.key == pygame.K_RIGHT:
+                    move_left = False
+        if move_left:
+            player_1.x -= 5
+        else:
+            player_1.x += 5
         GameField.draw()
 
         Ball.draw()
