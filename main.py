@@ -33,26 +33,23 @@ class Platforms:
         pygame.draw.line(GameField.screen, self.color, (self.x - Platforms.size // 2, self.y),
                          (self.x + Platforms.size // 2, self.y), 4)
 
-    def check_collision(self):
-        if (self.x - Platforms.size // 2 < Ball.coordinates[0] < self.x + Platforms.size // 2) and (
-                (Ball.coordinates[1] + Ball.size == self.y) or (Ball.coordinates[1] - Ball.size == self.y)):
-            print("КОНТАКТ!")
-            Ball.dy = - Ball.dy
-            return True
+    def check_collision(self) -> None:
+        if abs(Ball.coordinates[1] + Ball.dx - self.y) < 15 and (
+                Ball.coordinates[0] + Ball.size >= self.x - Platforms.size // 2 and
+                Ball.coordinates[0] - Ball.size <= self.x + Platforms.size // 2):
+            Ball.dy = -Ball.dy
 
 
 player_1 = Platforms(GameField.WIDTH // 2, 150, GREEN)
 player_2 = Platforms(GameField.WIDTH // 2, GameField.HEIGHT - 150, BLUE)
 
 
-class AngleDetection:
-    pass
 
 
 class Ball:
     coordinates = (GameField.WIDTH // 2, GameField.HEIGHT // 2)
-    dx = random.randint(-10, 10)
-    dy = random.randint(-10, 10)
+    dx = 3
+    dy = -7
     color = RED
     size = 10
 
@@ -66,9 +63,9 @@ class Ball:
 
     @classmethod
     def check_collision(cls):
-        if cls.coordinates[0] >= GameField.WIDTH or cls.coordinates[0] <= 0:
+        if cls.coordinates[0] + cls.size >= GameField.WIDTH or cls.coordinates[0] - cls.size <= 0:
             cls.dx = -cls.dx
-        elif cls.coordinates[1] >= GameField.HEIGHT or cls.coordinates[1] <= 0:
+        elif cls.coordinates[1] + cls.size >= GameField.HEIGHT or cls.coordinates[1] - cls.size <= 0:
             cls.dy = -cls.dy
 
 
@@ -79,10 +76,8 @@ class Collision:
 
 class GameLoop:
     running = True
-    move_left_1 = None
-    move_left_2 = None
-    button_1_press = False
-    button_2_press = False
+    button_press_1 = False
+    button_press_2 = False
     button_key_1 = None
     button_key_2 = None
     while running:
@@ -93,29 +88,29 @@ class GameLoop:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_d:
                     button_key_1 = "right"
-                    button_1_press = True
+                    button_press_1 = True
                 elif event.key == pygame.K_a:
                     button_key_1 = "left"
-                    button_1_press = True
+                    button_press_1 = True
                 elif event.key == pygame.K_RIGHT:
                     button_key_2 = "right"
-                    button_2_press = True
+                    button_press_2 = True
                 elif event.key == pygame.K_LEFT:
                     button_key_2 = "left"
-                    button_2_press = True
+                    button_press_2 = True
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_d or event.key == pygame.K_a:
-                    button_1_press = False
+                    button_press_1 = False
                     button_key_1 = None
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
-                    button_2_press = False
+                    button_press_2 = False
                     button_key_2 = None
-        if button_1_press:
+        if button_press_1:
             if button_key_1 == "right":
                 player_1.x += 10
             elif button_key_1 == "left":
                 player_1.x -= 10
-        if button_2_press:
+        if button_press_2:
             if button_key_2 == "right":
                 player_2.x += 10
             elif button_key_2 == "left":
