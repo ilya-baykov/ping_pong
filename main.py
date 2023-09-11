@@ -79,7 +79,8 @@ class Collision:
 
 class GameLoop:
     running = True
-    move_left = None
+    move_left_1 = None
+    move_left_2 = None
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -87,13 +88,24 @@ class GameLoop:
                 break
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    move_left = True
+                    move_left_1 = True
                 elif event.key == pygame.K_RIGHT:
-                    move_left = False
-        if move_left:
+                    move_left_1 = False
+
+                elif event.key == pygame.K_a:
+                    move_left_2 = True
+                elif event.key == pygame.K_d:
+                    move_left_2 = False
+
+        if move_left_1 == True:
             player_1.x -= 5
-        else:
+        elif move_left_1 == False:
             player_1.x += 5
+
+        if move_left_2 == True:
+            player_2.x -= 5
+        elif move_left_2 == False:
+            player_2.x += 5
         GameField.draw()
 
         Ball.draw()
