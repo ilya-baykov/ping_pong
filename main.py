@@ -81,33 +81,47 @@ class GameLoop:
     running = True
     move_left_1 = None
     move_left_2 = None
+    button_1_press = False
+    button_2_press = False
+    button_key_1 = None
+    button_key_2 = None
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
                 break
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    move_left_1 = True
-                elif event.key == pygame.K_RIGHT:
-                    move_left_1 = False
-
+                if event.key == pygame.K_d:
+                    button_key_1 = "right"
+                    button_1_press = True
                 elif event.key == pygame.K_a:
-                    move_left_2 = True
-                elif event.key == pygame.K_d:
-                    move_left_2 = False
+                    button_key_1 = "left"
+                    button_1_press = True
+                elif event.key == pygame.K_RIGHT:
+                    button_key_2 = "right"
+                    button_2_press = True
+                elif event.key == pygame.K_LEFT:
+                    button_key_2 = "left"
+                    button_2_press = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_d or event.key == pygame.K_a:
+                    button_1_press = False
+                    button_key_1 = None
+                elif event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
+                    button_2_press = False
+                    button_key_2 = None
+        if button_1_press:
+            if button_key_1 == "right":
+                player_1.x += 10
+            elif button_key_1 == "left":
+                player_1.x -= 10
+        if button_2_press:
+            if button_key_2 == "right":
+                player_2.x += 10
+            elif button_key_2 == "left":
+                player_2.x -= 10
 
-        if move_left_1 == True:
-            player_1.x -= 5
-        elif move_left_1 == False:
-            player_1.x += 5
-
-        if move_left_2 == True:
-            player_2.x -= 5
-        elif move_left_2 == False:
-            player_2.x += 5
         GameField.draw()
-
         Ball.draw()
         Ball.move()
         Ball.check_collision()
