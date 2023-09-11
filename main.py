@@ -44,8 +44,6 @@ player_1 = Platforms(GameField.WIDTH // 2, 150, GREEN)
 player_2 = Platforms(GameField.WIDTH // 2, GameField.HEIGHT - 150, BLUE)
 
 
-
-
 class Ball:
     coordinates = (GameField.WIDTH // 2, GameField.HEIGHT // 2)
     dx = 3
@@ -106,14 +104,14 @@ class GameLoop:
                     button_press_2 = False
                     button_key_2 = None
         if button_press_1:
-            if button_key_1 == "right":
+            if button_key_1 == "right" and player_1.x < GameField.WIDTH - Platforms.size // 2:
                 player_1.x += 10
-            elif button_key_1 == "left":
+            elif button_key_1 == "left" and player_1.x > Platforms.size // 2:
                 player_1.x -= 10
         if button_press_2:
-            if button_key_2 == "right":
+            if button_key_2 == "right" and player_2.x < GameField.WIDTH - Platforms.size // 2:
                 player_2.x += 10
-            elif button_key_2 == "left":
+            elif button_key_2 == "left" and player_2.x > Platforms.size // 2:
                 player_2.x -= 10
 
         GameField.draw()
